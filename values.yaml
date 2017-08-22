@@ -1,0 +1,74 @@
+# Default values for OpenWhisk.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# zookeeper configurations
+zookeeper:
+  deploymentName: "zookeeper"
+  replicaCount: 1
+  restartPolicy: "Always"
+  containerName: "zookeeper"
+  image: "zookeeper:3.4"
+  imagePullPolicy: "IfNotPresent"
+  serverPort: 2888
+  leaderElectionPort: 3888
+
+# kafka configurations
+kafka:
+  statefulsetName: "kafka"
+  replicaCount: 1
+  image: "solsson/kafka:0.11.0.0"
+  imagePullPolicy: "IfNotPresent"
+
+# Couchdb configurations
+couchdb:
+  deploymentName: "couchdb"
+  replicaCount: 1  
+  imagePullPolicy: "IfNotPresent"
+  image: "tomxing/openwhisk_couchdb"
+  dbPrefix: "test_"
+
+# Nginx configurations
+nginx:
+  secretName: "nginx"
+  configmapName: "nginx"
+  deploymentName: "nginx"
+  replicaCount: 1
+  image: "tomxing/openwhisk_nginx"
+  imagePullPolicy: "IfNotPresent"
+  httpPort: 80
+  httpsPort: 443
+  httpsAdminPort: 8443
+  serviceName: "nginx"
+
+# Controller configurations
+controllerReplicaCount: 1 
+controllerImagePullPolicy: "IfNotPresent"
+controllerImage: "openwhisk/controller" 
+controllerInstances: 1
+
+# Invoker configurations
+invokerStatefulsetName: "invoker"
+invokerReplicasetCount: 1
+invokerImagePullPolicy: "IfNotPresent"
+invokerImage: "openwhisk/invoker" 
+invokerInstances: 1
+invokerOptions: ""
+
+activationsTable: "test_activations"
+actionsTable: "test_whisks"
+authsTable: "test_subjects"
+ 
+# Global configurations
+global:
+  zookeeperServiceName: "zookeeper"
+  kafkaServiceName: "kafka"
+  zookeeperPort: 2181
+  kafkaPort: 9092
+  couchdbServiceName: "couchdb"
+  couchdbPort: 5984
+  controllerStatefulsetName: "controller"
+  controllerServiceName: "controller"
+  controllerPort: 8080
+  couchdbUserName: "whisk_admin"
+  couchdbPassword: "some_passw0rd"

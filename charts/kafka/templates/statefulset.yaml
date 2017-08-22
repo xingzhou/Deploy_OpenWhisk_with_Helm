@@ -1,0 +1,51 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: {{ template "kafka_statefulset_name" . }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  serviceName: {{ template "kafka_service_name" . }} 
+  replicas: {{ .Values.replicaCount | default 1 }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "kafka_statefulset_name" . }}
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[
+            {
+                "name": "wait-for-zookeeper",
+                "image": "busybox",
+                "imagePullPolicy": "IfNotPresent",
+                "command": ["sh", "-c", "until nslookup {{ .Values.global.zookeeperServiceName}}.{{ .Release.Namespace }}; do echo waiting for {{ .Values.global.zookeeperServiceName}}.{{ .Release.Namespace }}; sleep 1; done;"]
+            }
+        ]'
+    spec:
+      containers:
+      - name: {{ template "kafka_statefulset_name" . }}
+        image: {{ .Values.image | default "solsson/kafka:0.11.0.0" | quote }}
+        imagePullPolicy: {{ .Values.imagePullPolicy | default "IfNotPresent" | quote }}
+        livenessProbe:
+          exec:
+            command:
+              - bin/kafka-topics.sh
+              - --zookeeper
+              - {{ include "zookeeper_service_address" . | quote }}
+              - --list
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - bin/kafka-topics.sh
+              - --zookeeper
+              - {{ include "zookeeper_service_address" . | quote }}
+              - --list
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        ports:
+        - containerPort: {{ template "kafka_port" . }}
+          name: kafka
+        command:
+        - sh
+        - -c
+        - "./bin/kafka-server-start.sh config/server.properties --override zookeeper.connect={{ template "zookeeper_service_address" . }} --override broker.id=${HOSTNAME##*-}"

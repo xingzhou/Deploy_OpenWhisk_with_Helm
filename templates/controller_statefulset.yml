@@ -1,0 +1,118 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "controller_service_name" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    name: {{ template "controller_service_name" . }}
+spec:
+  selector:
+    name: {{ template "controller_statefulset_name" . }}
+  clusterIP: None
+  ports:
+    - port: {{ template "controller_port" . }}
+      targetPort: {{ template "controller_port" . }}
+      name: http
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: {{ template "controller_statefulset_name" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    name: {{ template "controller_statefulset_name" . }} 
+spec:
+  replicas: {{ .Values.controllerReplicaCount | default 1 }}
+  serviceName: {{ template "controller_service_name" . }}
+  template:
+    metadata:
+      labels:
+        name: {{ template "controller_statefulset_name" . }}
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: {{ template "controller_statefulset_name" . }}
+        imagePullPolicy: {{ .Values.controllerImagePullPolicy | default "IfNotPresent" | quote }}
+        # Update this image to the publix OpenWhisk Image once this PR is merged.
+        # https://github.com/apache/incubator-openwhisk/pull/2452
+        image: {{ .Values.controllerImage | default "openwhisk/controller" | quote }}
+        command: ["/bin/bash", "-c", "COMPONENT_NAME=$(hostname | cut -d'-' -f2) /controller/bin/controller `hostname | cut -d'-' -f2`"]
+        ports:
+        - name: controller
+          containerPort: {{ template "controller_port" . }}
+        livenessProbe:
+          httpGet:
+            path: "/ping"
+            port: {{ template "controller_port" . }}
+            scheme: "HTTP"
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 1
+        env:
+        - name: "PORT"
+          value: {{ include "controller_port" . | quote }}
+
+        # Loadbalancer options
+        - name: "LOADBALANCER_INVOKERBUSYTHRESHOLD"
+          value: "16"
+
+        # This needs to stay up to date with the lates runtime in Ansible Groupvars
+        - name: "RUNTIMES_MANIFEST"
+          value: '{ "defaultImagePrefix": "openwhisk", "defaultImageTag": "latest", "runtimes": { "nodejs": [ { "kind": "nodejs", "image": { "name": "nodejsaction" }, "deprecated": true }, { "kind": "nodejs:6", "default": true, "image": { "name": "nodejs6action" }, "deprecated": false } ], "python": [ { "kind": "python", "image": { "name": "python2action" }, "deprecated": false }, { "kind": "python:2", "default": true, "image": { "name": "python2action" }, "deprecated": false }, { "kind": "python:3", "image": { "name": "python3action" }, "deprecated": false } ], "swift": [ { "kind": "swift", "image": { "name": "swiftaction" }, "deprecated": true }, { "kind": "swift:3", "image": { "name": "swift3action" }, "deprecated": false }, { "kind": "swift:3.1.1", "default": true, "image": { "name": "action-swift-v3.1.1" }, "deprecated": false } ], "java": [ { "kind": "java", "default": true, "image": { "name": "java8action" }, "deprecated": false, "attached": { "attachmentName": "jarfile", "attachmentType": "application/java-archive" }, "sentinelledLogs": false, "requireMain": true } ] }, "blackboxes": [ { "name": "dockerskeleton" } ] }'
+
+        # this version is the day it is deployed and should be configured every time
+        - name:  "WHISK_VERSION_DATE"
+          value: "2017-01-01T00:00:00Z"
+        # the buildno should be the docker image tag to use
+        - name: "WHISK_VERSION_BUILDNO"
+          value: "latest"
+
+        # Java options
+        - name: "JAVA_OPTS"
+          value: "-Xmx2g"
+
+        # Kafka properties
+        - name: "KAFKA_HOST"
+          value: {{ include "kafka_url_without_port" . | quote }}
+        - name: "KAFKA_HOST_PORT"
+          value: {{ .Values.global.kafkaPort | default 9092 | quote }}
+
+        # specific controller arguments
+        - name: "CONTROLLER_OPTS"
+          value: ""
+        - name: "DEFAULTLIMITS_ACTIONS_INVOKES_PERMINUTE"
+          value: "120"
+        - name: "DEFAULTLIMITS_ACTIONS_INVOKES_CONCURRENT"
+          value: "100"
+        - name: "DEFAULTLIMITS_ACTIONS_INVOKES_CONCURRENTINSYSTEM"
+          value: "500"
+        - name: "DEFAULTLIMITS_ACTIONS_SEQUENCE_MAXLENGTH"
+          value: "50"
+        - name: "DEFAULTLIMITS_TRIGGERS_FIRES_PERMINUTE"
+          value: "60"
+
+        # properties for DB connection
+        - name: "DB_USERNAME"
+          value: {{ template "couchdb_username" . }}
+        - name: "DB_PASSWORD"
+          value: {{ template "couchdb_password" . }}
+        - name: "DB_PORT"
+          value: {{ include "couchdb_port" . | quote}}
+        - name:  "DB_PROTOCOL"
+          value: "http"
+        - name: "DB_HOST"
+          value: {{ include "couchdb_url_without_port" . | quote }} 
+        - name: "DB_PROVIDER"
+          value: "CouchDB"
+        - name: "DB_WHISK_ACTIVATIONS"
+          value: {{ template "activations_table" . }}
+        - name: "DB_WHISK_ACTIONS"
+          value: {{ template "actions_table" . }}
+        - name: "DB_WHISK_AUTHS"
+          value: {{ template "auths_table" . }}
+
+        - name: "CONTROLLER_INSTANCES"
+          value: {{ .Values.controllerInstances | default 1 | quote }} 
+
