@@ -46,6 +46,11 @@ controllerReplicaCount: 1
 controllerImagePullPolicy: "IfNotPresent"
 controllerImage: "openwhisk/controller" 
 controllerInstances: 1
+controllerLimitsActionsInvokesConcurrentinsystem: 100
+controllerLimitsTriggersFiresPerminute: 100
+controllerLimitsActionsSequenceMaxlength: 1000
+controllerLimitsActionsInvokesConcurrent: 100
+controllerLimitsActionsInvokesConcurrentinsystem: 100
 
 # Invoker configurations
 invokerStatefulsetName: "invoker"

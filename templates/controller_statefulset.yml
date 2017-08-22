@@ -113,6 +113,17 @@ spec:
         - name: "DB_WHISK_AUTHS"
           value: {{ template "auths_table" . }}
 
+        - name: "LIMITS_ACTIONS_SEQUENCE_MAXLENGTH"
+          value: {{ .Values.controllerLimitsActionsSequenceMaxlength | default 1000 | quote }}
+        - name: "LIMITS_TRIGGERS_FIRES_PERMINUTE"
+          value: {{ .Values.controllerLimitsTriggersFiresPerminute | default 100 | quote }}
+        - name: "LIMITS_ACTIONS_INVOKES_PERMINUTE"
+          value: {{ .Values.controllerLimitsActionsInvokesPerminute | default 100 | quote }}
+        - name: "LIMITS_ACTIONS_INVOKES_CONCURRENTINSYSTEM"
+          value: {{ .Values.controllerLimitsActionsInvokesConcurrentinsystem | default 100 | quote }}
+        - name: "LIMITS_ACTIONS_INVOKES_CONCURRENT"
+          value: {{ .Values.controllerLimitsActionsInvokesConcurrent | default 100 | quote }}
+
         - name: "CONTROLLER_INSTANCES"
           value: {{ .Values.controllerInstances | default 1 | quote }} 
 
