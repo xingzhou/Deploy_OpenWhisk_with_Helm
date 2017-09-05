@@ -94,7 +94,7 @@ kubectl describe service nginx -n openwhisk
 From the output, please find out the port used for api endpoint. Combine this port with node IP on which nginx pod is deployed, and run the following OpenWhisk client configuration:
 ```shell
 wsk property set --apihost http://<nginx_node_IP>:<nginx_api_port>
-wsk property set --auth https://github.com/apache/incubator-openwhisk/tree/master/docs
+wsk property set --auth 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
 ```
 
 Prepare a small js function like the following and save it to `greeting.js`:
