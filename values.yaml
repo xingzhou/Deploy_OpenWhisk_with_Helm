@@ -25,7 +25,7 @@ couchdb:
   deploymentName: "couchdb"
   replicaCount: 1  
   imagePullPolicy: "IfNotPresent"
-  image: "tomxing/openwhisk_couchdb"
+  image: "xingzhou/couchdb"
   dbPrefix: "test_"
 
 # Nginx configurations
@@ -51,6 +51,9 @@ controllerLimitsTriggersFiresPerminute: 100
 controllerLimitsActionsSequenceMaxlength: 1000
 controllerLimitsActionsInvokesConcurrent: 100
 controllerLimitsActionsInvokesConcurrentinsystem: 100
+controllerLocalbookkeeping: true
+controllerBlackboxFraction: 0.10
+controllerSeedNodes: "[]"
 
 # Invoker configurations
 invokerStatefulsetName: "invoker"
