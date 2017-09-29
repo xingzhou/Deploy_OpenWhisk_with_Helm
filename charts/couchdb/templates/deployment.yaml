@@ -26,9 +26,9 @@ spec:
           value: "127.0.0.1"
         - name: "DB_PREFIX"
           value: {{ .Values.dbPrefix | default "test_" | quote }}
-        - name: "DB_USERNAME"
+        - name: "COUCHDB_USER"
           value: {{ .Values.global.couchdbUserName | default "whisk_admin" | quote }}
-        - name: "DB_PASSWORD"
+        - name: "COUCHDB_PASSWORD"
           value: {{ .Values.global.couchdbPassword | default "some_passw0rd" | quote }}
         - name: "DB_PORT"
           value: {{ include "couchdb_port" . | quote }}
