@@ -126,4 +126,9 @@ spec:
 
         - name: "CONTROLLER_INSTANCES"
           value: {{ .Values.controllerInstances | default 1 | quote }} 
-
+        - name: "CONTROLLER_LOCALBOOKKEEPING"
+          value: {{ .Values.controllerLocalbookkeeping | default false | quote }}
+        - name: "CONTROLLER_BLACKBOXFRACTION"
+          value: {{ .Values.controllerBlackboxFraction | default 0.10 | quote }}
+        - name: "AKKA_CLUSTER_SEED_NODES"
+          value: {{ .Values.controllerSeedNodes | default "[]" | quote }}
