@@ -58,3 +58,28 @@
 {{- define "couchdb_port" -}}
 {{ .Values.global.couchdb_port | default 5984 }}
 {{- end -}}
+
+{{/* Set API Gateway service name */}}
+{{- define "apigateway_service_name" -}}
+{{ .Values.serviceName | default "apigateway" | quote }}
+{{- end -}}
+
+{{/* Set API Gateway management port */}}
+{{- define "apigateway_mgmt_port" -}}
+{{ .Values.mgmtPort | default 8080 }}
+{{- end -}}
+
+{{/* Set API Gateway API port */}}
+{{- define "apigateway_api_port" -}}
+{{ .Values.apiPort | default 9000 }}
+{{- end -}}
+
+{{/* Set API Gateway deployment name */}}
+{{- define "apigateway_deployment_name" -}}
+{{ .Values.deploymentName | default "apigateway" | quote }}
+{{- end -}}
+
+{{/* Generate redis service url */}}
+{{- define "redis_url" -}}
+{{ .Values.global.redisServiceName | default "redis" }}.{{ .Release.Namespace }}
+{{- end -}}

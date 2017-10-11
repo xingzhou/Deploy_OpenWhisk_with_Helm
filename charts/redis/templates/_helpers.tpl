@@ -1,6 +1,6 @@
 { Get redis service name */}}
 {{- define "redis_service_name" -}}
-{{ .Values.serviceName | default "redis" | quote }}
+{{ .Values.global.redisServiceName | default "redis" | quote }}
 {{- end -}}
 
 { Get redis deployment name */}}
@@ -10,5 +10,5 @@
 
 {{/* Set port */}}
 {{- define "redis_port" -}}
-{{ .Values.port | default 6379 }}
+{{ .Values.global.redisServicePort | default 6379 }}
 {{- end -}}
