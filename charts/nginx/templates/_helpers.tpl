@@ -45,5 +45,5 @@ http://{{ .Values.global.statefulsetName | default "controller" }}-0.{{ .Values.
 
 {{/* Set controller statefulset name */}}
 {{- define "controller_statefulset_name" -}}
-{{ .Values.global.controllerStatefulSetName | default "controller" | quote }}
+{{ .Values.global.controllerStatefulSetName | default "controller" }}
 {{- end -}}
