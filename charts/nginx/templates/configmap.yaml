@@ -17,11 +17,15 @@ data:
           '$request $status $body_bytes_sent '
           '$http_referer $http_user_agent $upstream_addr';
       access_log /logs/nginx_access.log combined-upstream;
-
+      {{- if gt (atoi (quote .Values.global.controllerReplicaCount)) 1 }}
       # Add load balance configuration if you have more than 1 controllers.
-      #upstream controllers {
-      #    server controller-0.controller.openwhisk:8080
-      #}
+      upstream controllers {
+          server {{ template "controller_statefulset_name" . }}-0.controller.openwhisk:8080 fail_timeout=60s;
+          {{- range $k, $v := until (atoi (quote .Values.global.controllerReplicaCount)) }}
+          server {{ template "controller_statefulset_name" . }}-{{$k}}.controller.openwhisk:8080 backup;
+          {{- end }}
+      }
+      {{- end }}
 
       server {
           listen 443 default ssl;
@@ -46,7 +50,11 @@ data:
               if ($namespace) {
                 rewrite    /(.*) /api/v1/web/${namespace}/$1 break;
               }
+              {{- if gt (atoi (quote .Values.global.controllerReplicaCount)) 1 }}
+              proxy_pass http://controllers;
+              {{- else }}
               proxy_pass {{ template "controller_url" . }};
+              {{- end }}
               proxy_read_timeout 70s; # 60+10 additional seconds to allow controller to terminate request
           }
 
@@ -55,7 +63,11 @@ data:
               if ($namespace) {
                 rewrite    ^ /api/v1/web/${namespace}/public/index.html break;
               }
+              {{- if gt (atoi (quote .Values.global.controllerReplicaCount)) 1 }}
+              proxy_pass http://controllers;
+              {{- else }}
               proxy_pass {{ template "controller_url" . }};
+              {{- end }}
               proxy_read_timeout 70s; # 60+10 additional seconds to allow controller to terminate request
           }
 

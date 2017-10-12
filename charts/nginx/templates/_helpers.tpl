@@ -43,3 +43,7 @@ http://{{ .Values.global.statefulsetName | default "controller" }}-0.{{ .Values.
 {{ .Values.httpsAdminPort | default 8443 }}
 {{- end -}}
 
+{{/* Set controller statefulset name */}}
+{{- define "controller_statefulset_name" -}}
+{{ .Values.global.controllerStatefulSetName | default "controller" | quote }}
+{{- end -}}

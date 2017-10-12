@@ -49,7 +49,6 @@ redis:
   imagePullPolicy: "IfNotPresent"
 
 # Controller configurations
-controllerReplicaCount: 1 
 controllerImagePullPolicy: "IfNotPresent"
 controllerImage: "openwhisk/controller" 
 controllerInstances: 1
@@ -85,9 +84,10 @@ global:
   kafkaPort: 9092
   couchdbServiceName: "couchdb"
   couchdbPort: 5984
-  controllerStatefulsetName: "controller"
+  controllerStatefulSetName: "controller"
   controllerServiceName: "controller"
   controllerPort: 8080
+  controllerReplicaCount: 2
   couchdbUserName: "whisk_admin"
   couchdbPassword: "some_passw0rd"
   redisServiceName: "redis"

@@ -5,7 +5,7 @@
 
 {{/* Set controller statefulset name */}}
 {{- define "controller_statefulset_name" -}}
-{{ .Values.global.statefulsetName | default "controller" | quote }}
+{{ .Values.global.controllerStatefulSetName | default "controller" | quote }}
 {{- end -}}
 
 {{/* Set controller port */}}

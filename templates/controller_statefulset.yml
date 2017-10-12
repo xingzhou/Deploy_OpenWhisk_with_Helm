@@ -23,7 +23,7 @@ metadata:
   labels:
     name: {{ template "controller_statefulset_name" . }} 
 spec:
-  replicas: {{ .Values.controllerReplicaCount | default 1 }}
+  replicas: {{ .Values.global.controllerReplicaCount | default 2 }}
   serviceName: {{ template "controller_service_name" . }}
   template:
     metadata:
