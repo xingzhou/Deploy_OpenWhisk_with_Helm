@@ -51,7 +51,6 @@ redis:
 # Controller configurations
 controllerImagePullPolicy: "IfNotPresent"
 controllerImage: "openwhisk/controller" 
-controllerInstances: 1
 controllerLimitsActionsInvokesConcurrentinsystem: 100
 controllerLimitsTriggersFiresPerminute: 100
 controllerLimitsActionsSequenceMaxlength: 1000
