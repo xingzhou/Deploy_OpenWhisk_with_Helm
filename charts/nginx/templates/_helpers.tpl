@@ -1,11 +1,11 @@
 { Generate controller url */}}
 {{- define "controller_url" -}}
-http://{{ .Values.global.statefulsetName | default "controller" }}-0.{{ .Values.global.controllerServiceName | default "controller" }}.{{ .Release.Namespace }}:{{ .Values.global.controllerPort | default 8080 }}
+http://{{ .Values.global.controllerStatefulSetName | default "controller" }}-0.{{ .Values.global.controllerServiceName | default "controller" }}.{{ .Release.Namespace }}:{{ .Values.global.controllerPort | default 8080 }}
 {{- end -}}
 
 { Generate controller url witout port */}}
 {{- define "controller_url_without_port" -}}
-{{ .Values.global.statefulsetName | default "controller" }}-0.{{ .Values.global.controllerServiceName | default "controller" }}.{{ .Release.Namespace }}
+{{ .Values.global.controllerStatefulSetName | default "controller" }}-0.{{ .Values.global.controllerServiceName | default "controller" }}.{{ .Release.Namespace }}
 {{- end -}}
 
 {{/* Set deployment name */}}
