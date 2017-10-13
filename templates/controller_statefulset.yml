@@ -29,6 +29,15 @@ spec:
     metadata:
       labels:
         name: {{ template "controller_statefulset_name" . }}
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[
+            {
+                "name": "wait-for-kafka",
+                "image": "busybox",
+                "imagePullPolicy": "IfNotPresent",
+                "command": ["sh", "-c", "until nslookup {{ .Values.global.kafkaServiceName}}.{{ .Release.Namespace }}; do echo waiting for {{ .Values.global.kafkaServiceName}}.{{ .Release.Namespace }}; sleep 1; done;"]
+            }
+        ]'
     spec:
       restartPolicy: Always
 
