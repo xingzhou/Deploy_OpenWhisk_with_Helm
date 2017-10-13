@@ -21,7 +21,7 @@ data:
       {{- if gt (.Values.global.controllerReplicaCount | int) 1 }}
       # Add load balance configuration if you have more than 1 controllers.
       upstream controllers {
-          server {{ template "controller_statefulset_name" . }}-0.controller.openwhisk:8080 fail_timeout=60s;
+          server {{ $root.Values.global.controllerStatefulSetName | default "controller" }}-0.controller.openwhisk:8080 fail_timeout=60s;
           {{- range $k := untilStep 1 (.Values.global.controllerReplicaCount | int) 1 }}
           server {{ $root.Values.global.controllerStatefulSetName | default "controller" }}-{{$k}}.controller.openwhisk:8080 backup;
           {{- end }}
