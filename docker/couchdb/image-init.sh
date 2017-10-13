@@ -14,4 +14,6 @@ pushd /openwhisk
   pip install --upgrade cffi
   sudo pip install markupsafe
   sudo pip install ansible==2.3.0.0
+
+  sudo pip install -U pyopenssl
 popd
