@@ -62,11 +62,11 @@ controllerSeedNodes: "[]"
 
 # Invoker configurations
 invokerStatefulsetName: "invoker"
-invokerReplicasetCount: 1
+invokerReplicasetCount: 2
 invokerImagePullPolicy: "IfNotPresent"
-invokerImage: "openwhisk/invoker" 
-invokerInstances: 1
+invokerImage: "openwhisk/invoker"
 invokerOptions: ""
+invokerBusyThreshold: 1
 
 # API Gateway configurations
 apigatewayReplicaCount: 1

@@ -6,7 +6,7 @@ metadata:
   labels:
     name: {{ template "invoker_statefulset_name" . }} 
 spec:
-  replicas: {{ .Values.invokerReplicaCount | default 1 }}
+  replicas: {{ .Values.invokerReplicasetCount | default 2 }}
   serviceName: {{ template "invoker_statefulset_name" . }}
   template:
     metadata:
@@ -63,6 +63,8 @@ spec:
             value: "latest"
           - name: "INVOKER_CONTAINER_NETWORK"
             value: "bridge"
+          - name: "INVOKER_BUSYTHRESHOLD"
+            value: {{ .Values.invokerBusyThreshold | default 16 | quote }}
 
           # Properties for invoker image
           - name: "DOCKER_IMAGE_PREFIX"
@@ -74,7 +76,7 @@ spec:
 
           # Invoker instance count. Needs to match replica count
           - name: "INVOKER_INSTANCES"
-            value: {{ .Values.invokerInstances | default 1 | quote }}
+            value: {{ .Values.invokerReplicasetCount | default 2 | quote }}
 
           # Java options
           - name: "JAVA_OPTS"
