@@ -1,5 +1,5 @@
-apiVersion: apps/v1beta1
-kind: StatefulSet
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
   name: {{ template "invoker_statefulset_name" . }}
   namespace: {{ .Release.Namespace | quote }}
@@ -7,7 +7,7 @@ metadata:
     name: {{ template "invoker_statefulset_name" . }} 
 spec:
   replicas: {{ .Values.invokerReplicasetCount | default 2 }}
-  serviceName: {{ template "invoker_statefulset_name" . }}
+  #serviceName: {{ template "invoker_statefulset_name" . }}
   template:
     metadata:
       labels:
@@ -45,7 +45,7 @@ spec:
       - name: {{ template "invoker_statefulset_name" . }}
         imagePullPolicy: {{ .Values.invokerImagePullPolicy | default "IfNotPresent" | quote }}
         image: {{ .Values.invokerImage | default "openwhisk/invoker" | quote }}
-        command: [ "/bin/bash", "-c", "COMPONENT_NAME=$(hostname | cut -d'-' -f2) /invoker/bin/invoker `hostname | cut -d'-' -f2`" ]
+        command: [ "/bin/bash", "-c", "COMPONENT_NAME=$(hostname | cut -d'-' -f2) /invoker/bin/invoker"]# "COMPONENT_NAME=$(hostname | cut -d'-' -f2) /invoker/bin/invoker `hostname | cut -d'-' -f2`" ]
         env:
           - name: "PORT"
             value: "8080"
@@ -65,6 +65,8 @@ spec:
             value: "bridge"
           - name: "INVOKER_BUSYTHRESHOLD"
             value: {{ .Values.invokerBusyThreshold | default 16 | quote }}
+          - name: "INVOKER_USE_RUNC"
+            value: "false"
 
           # Properties for invoker image
           - name: "DOCKER_IMAGE_PREFIX"
@@ -74,9 +76,18 @@ spec:
           - name: "DOCKER_REGISTRY"
             value: ""
 
+          - name: "REDIS_HOST_PORT"
+            value: "6379"
+          - name: "REDIS_HOST"
+            value: "redis.openwhisk"
+          - name: "INVOKER_NAME"
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+
           # Invoker instance count. Needs to match replica count
-          - name: "INVOKER_INSTANCES"
-            value: {{ .Values.invokerReplicasetCount | default 2 | quote }}
+          #- name: "INVOKER_INSTANCES"
+          #  value: {{ .Values.invokerReplicasetCount | default 2 | quote }}
 
           # Java options
           - name: "JAVA_OPTS"
