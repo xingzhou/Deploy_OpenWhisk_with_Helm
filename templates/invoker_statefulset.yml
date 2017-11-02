@@ -46,6 +46,10 @@ spec:
         imagePullPolicy: {{ .Values.invokerImagePullPolicy | default "IfNotPresent" | quote }}
         image: {{ .Values.invokerImage | default "openwhisk/invoker" | quote }}
         command: [ "/bin/bash", "-c", "COMPONENT_NAME=$(hostname | cut -d'-' -f2) /invoker/bin/invoker"]# "COMPONENT_NAME=$(hostname | cut -d'-' -f2) /invoker/bin/invoker `hostname | cut -d'-' -f2`" ]
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "0.1"
         env:
           - name: "PORT"
             value: "8080"

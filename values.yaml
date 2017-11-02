@@ -27,6 +27,14 @@ couchdb:
   imagePullPolicy: "IfNotPresent"
   image: "tomxing/openwhisk_couchdb"
   dbPrefix: "test_"
+  persistence:
+    enabled: true
+    size: 8Gi
+    # storageClass:
+    accessMode: ReadWriteOnce
+    # nfs_path: /home/nfs
+    # nfs_server: 172.20.5.175
+
 
 # Nginx configurations
 nginx:

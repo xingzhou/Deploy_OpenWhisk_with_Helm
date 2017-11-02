@@ -32,3 +32,15 @@ spec:
           value: {{ .Values.global.couchdbPassword | default "some_passw0rd" | quote }}
         - name: "DB_PORT"
           value: {{ include "couchdb_port" . | quote }}
+        {{- if .Values.persistence.enabled }}
+        volumeMounts:
+          - name: database-storage
+            mountPath: /usr/local/var/lib/couchdb
+        {{- end }}
+      {{- if .Values.persistence.enabled }}
+      volumes:
+        - name: database-storage
+          persistentVolumeClaim:
+            claimName: couchdb-pvc
+      {{- end }}
+
