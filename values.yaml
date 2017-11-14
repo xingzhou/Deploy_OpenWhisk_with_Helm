@@ -68,6 +68,9 @@ controllerLimitsActionsInvokesConcurrentinsystem: 100
 controllerLocalbookkeeping: true
 controllerBlackboxFraction: 0.10
 controllerSeedNodes: "[]"
+controllerActionsDdoc: "whisks"
+controllerActivationsDdoc: "whisks"
+controllerHA: false
 
 # Invoker configurations
 invokerStatefulsetName: "invoker"
