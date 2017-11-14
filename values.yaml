@@ -28,9 +28,10 @@ couchdb:
   image: "tomxing/openwhisk_couchdb"
   dbPrefix: "test_"
   persistence:
-    enabled: true
+    enabled: false
+    pvcName: couchdb-pvc
     size: 8Gi
-    # storageClass:
+    storageClass: CouchDBSC 
     accessMode: ReadWriteOnce
     # nfs_path: /home/nfs
     # nfs_server: 172.20.5.175

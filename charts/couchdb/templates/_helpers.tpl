@@ -12,3 +12,8 @@
 {{- define "couchdb_deployment_name" -}}
 {{ .Values.deploymentName | default "couchdb" | quote }}
 {{- end -}}
+
+{{/* Set Couchdb PVC name */}}
+{{- define "couchdb_pvc_name" -}}
+{{ .Values.pvcName | default "couchdb-pvc" | quote }}
+{{- end -}}

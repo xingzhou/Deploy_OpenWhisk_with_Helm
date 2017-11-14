@@ -2,10 +2,10 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: couchdb-pvc
+  name: {{ template "couchdb_pvc_name" . }}
   labels:
     type: couchdb
-  namespace: openwhisk
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}
