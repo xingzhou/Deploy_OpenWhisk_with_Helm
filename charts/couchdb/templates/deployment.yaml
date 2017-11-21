@@ -13,6 +13,19 @@ spec:
         name: {{ template "couchdb_deployment_name" . }}
     spec:
       restartPolicy: Always
+
+      {{- if .Values.global.affinity.enabled }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nodeType
+                operator: In
+                values:
+                - {{ .Values.global.affinity.kafkaNodeLabel }}
+      {{- end }}
+
       containers:
       - name: {{ template "couchdb_deployment_name" . }}
         imagePullPolicy: {{ .Values.imagePullPolicy | default "IfNotPresent" | quote }}
