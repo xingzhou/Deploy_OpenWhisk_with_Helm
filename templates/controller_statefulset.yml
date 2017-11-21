@@ -41,6 +41,18 @@ spec:
     spec:
       restartPolicy: Always
 
+      {{- if .Values.affinity.enabled }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+            - key: nodeType
+              operator: In
+              values:
+              - {{ template "controller_statefulset_name" . }}
+      {{- end }}
+
       containers:
       - name: {{ template "controller_statefulset_name" . }}
         imagePullPolicy: {{ .Values.controllerImagePullPolicy | default "IfNotPresent" | quote }}

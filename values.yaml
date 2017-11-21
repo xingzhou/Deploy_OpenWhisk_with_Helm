@@ -86,6 +86,12 @@ apigatewayReplicaCount: 1
 activationsTable: "test_activations"
 actionsTable: "test_whisks"
 authsTable: "test_subjects"
+
+# Resolve the pod/node affinity for invoker, controller and other components.
+affinity:
+  enabled: true
+  invokerNodeLabel: invoker
+  controllerNodeLabel: controller
  
 # Global configurations
 global:

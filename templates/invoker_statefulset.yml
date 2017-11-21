@@ -41,6 +41,18 @@ spec:
         hostPath:
           path: "/usr/lib/x86_64-linux-gnu/libapparmor.so.1"
 
+      {{- if .Values.affinity.enabled }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+            - key: nodeType
+              operator: In
+              values:
+              - {{ template "invoker_statefulset_name" . }}
+      {{- end }}
+
       containers:
       - name: {{ template "invoker_statefulset_name" . }}
         imagePullPolicy: {{ .Values.invokerImagePullPolicy | default "IfNotPresent" | quote }}
