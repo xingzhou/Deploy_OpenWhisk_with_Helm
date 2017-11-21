@@ -87,12 +87,6 @@ activationsTable: "test_activations"
 actionsTable: "test_whisks"
 authsTable: "test_subjects"
 
-# Resolve the pod/node affinity for invoker, controller and other components.
-affinity:
-  enabled: true
-  invokerNodeLabel: invoker
-  controllerNodeLabel: controller
- 
 # Global configurations
 global:
   zookeeperServiceName: "zookeeper"
@@ -109,3 +103,9 @@ global:
   couchdbPassword: "some_passw0rd"
   redisServiceName: "redis"
   redisServicePort: 6379
+  # Resolve the pod/node affinity for invoker, controller and other components.
+  affinity:
+    enabled: true
+    invokerNodeLabel: invoker
+    controllerNodeLabel: controller
+    kafkaNodeLabel: kafka

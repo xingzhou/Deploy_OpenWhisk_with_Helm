@@ -41,7 +41,7 @@ spec:
     spec:
       restartPolicy: Always
 
-      {{- if .Values.affinity.enabled }}
+      {{- if .Values.global.affinity.enabled }}
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -50,7 +50,7 @@ spec:
               - key: nodeType
                 operator: In
                 values:
-                - {{ .Values.affinity.controllerNodeLabel }}
+                - {{ .Values.global.affinity.controllerNodeLabel }}
       {{- end }}
 
       containers:

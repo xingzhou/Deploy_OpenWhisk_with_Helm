@@ -41,7 +41,7 @@ spec:
         hostPath:
           path: "/usr/lib/x86_64-linux-gnu/libapparmor.so.1"
 
-      {{- if .Values.affinity.enabled }}
+      {{- if .Values.global.affinity.enabled }}
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -50,7 +50,7 @@ spec:
               - key: nodeType
                 operator: In
                 values:
-                - {{ .Values.affinity.invokerNodeLabel }}
+                - {{ .Values.global.affinity.invokerNodeLabel }}
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:

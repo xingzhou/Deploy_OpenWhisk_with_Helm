@@ -14,6 +14,18 @@ spec:
     spec:
       restartPolicy: {{ .Values.restartPolicy | default "Always" | quote }}
 
+      {{- if .Values.global.affinity.enabled }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nodeType
+                operator: In
+                values:
+                - {{ .Values.global.affinity.kafkaNodeLabel }}
+      {{- end }}
+
       containers:
       - name: {{ .Values.containerName | default "zookeeper" | quote }}
         image: {{ .Values.image | default "zookeeper:3.4" | quote }}

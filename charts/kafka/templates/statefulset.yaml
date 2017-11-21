@@ -20,6 +20,17 @@ spec:
             }
         ]'
     spec:
+      {{- if .Values.global.affinity.enabled }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nodeType
+                operator: In
+                values:
+                - {{ .Values.global.affinity.kafkaNodeLabel }}
+      {{- end }}
       containers:
       - name: {{ template "kafka_statefulset_name" . }}
         image: {{ .Values.image | default "solsson/kafka:0.11.0.0" | quote }}
