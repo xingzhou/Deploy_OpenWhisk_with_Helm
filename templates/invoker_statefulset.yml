@@ -47,10 +47,19 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-            - key: nodeType
-              operator: In
-              values:
-              - {{ template "invoker_statefulset_name" . }}
+              - key: nodeType
+                operator: In
+                values:
+                - {{ .Values.affinity.invokerNodeLabel }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: name
+                  operator: In
+                  values:
+                  - {{ template "invoker_statefulset_name" . }}
+              topologyKey: "kubernetes.io/hostname"
       {{- end }}
 
       containers:

@@ -47,10 +47,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-            - key: nodeType
-              operator: In
-              values:
-              - {{ template "controller_statefulset_name" . }}
+              - key: nodeType
+                operator: In
+                values:
+                - {{ .Values.affinity.controllerNodeLabel }}
       {{- end }}
 
       containers:
