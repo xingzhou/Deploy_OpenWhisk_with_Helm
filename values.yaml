@@ -70,7 +70,7 @@ controllerBlackboxFraction: 0.10
 controllerSeedNodes: "[]"
 controllerActionsDdoc: "whisks"
 controllerActivationsDdoc: "whisks"
-controllerHA: false
+controllerHA: true
 
 # Invoker configurations
 invokerStatefulsetName: "invoker"

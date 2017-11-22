@@ -166,6 +166,10 @@ spec:
           value: {{ .Values.controllerBlackboxFraction | default 0.10 | quote }}
         - name: "AKKA_CLUSTER_SEED_NODES"
           value: {{ .Values.controllerSeedNodes | default "[]" | quote }}
+        - name: "CONTROLLER_HA"
+          value: {{ .Values.controllerHA | default false | quote }}
+        - name: "AKKA_ACTOR_PROVIDER"
+          value: "cluster"
 
         - name: "CONTROLLER_HA"
           value: {{ .Values.controllerHA | default false | quote }}
