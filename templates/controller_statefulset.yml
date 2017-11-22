@@ -51,6 +51,15 @@ spec:
                 operator: In
                 values:
                 - {{ .Values.global.affinity.controllerNodeLabel }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: name
+                operator: In
+                values:
+                - {{ template "controller_statefulset_name" . }}
+            topologyKey: "kubernetes.io/hostname"
       {{- end }}
 
       containers:
