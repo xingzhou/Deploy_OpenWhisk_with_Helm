@@ -79,6 +79,8 @@ invokerImagePullPolicy: "IfNotPresent"
 invokerImage: "openwhisk/invoker"
 invokerOptions: ""
 invokerBusyThreshold: 1
+invokerActionsDdoc: "whisks"
+invokerActivationsDdoc: "whisks"
 
 # API Gateway configurations
 apigatewayReplicaCount: 1

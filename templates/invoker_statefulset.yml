@@ -159,6 +159,14 @@ spec:
             value: {{ template "actions_table" . }}
           - name: "DB_WHISK_AUTHS"
             value: {{ template "auths_table" . }}
+          - name: "DB_WHISK_ACTIONS_DDOC"
+            value: {{ .Values.invokerActionsDdoc | default "whisks" | quote }}
+          - name: "DB_WHISK_ACTIVATIONS_DDOC"
+            value: {{ .Values.invokerActivationsDdoc | default "whisks" | quote }}
+          - name: "ZOOKEEPER_HOST"
+            value: "zookeeper.openwhisk"
+          - name: "ZOOKEEPER_HOST_PORT"
+            value: "2888"
         ports:
         - name: invoker
           containerPort: 8080
