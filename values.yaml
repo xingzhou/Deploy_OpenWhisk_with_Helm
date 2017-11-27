@@ -46,9 +46,13 @@ nginx:
   image: "tomxing/openwhisk_nginx"
   imagePullPolicy: "IfNotPresent"
   httpPort: 80
+  httpNodePort: 30000
   httpsPort: 443
+  httpsNodePort: 30001
   httpsAdminPort: 8443
+  httpsAdminNodePort: 30002
   serviceName: "nginx"
+
 
 # Redis configurations
 redis:

@@ -12,10 +12,19 @@ spec:
   ports:
     - port: {{ template "nginx_http_port" . }}
       targetPort: {{ template "nginx_http_port" . }}
+      {{- if .Values.httpNodePort }}
+      nodePort: {{ .Values.httpNodePort }}
+      {{- end }}
       name: http
     - port: {{ template "nginx_https_port" . }}
       targetPort: {{ template "nginx_https_port" . }}
+      {{- if .Values.httpsNodePort }}
+      nodePort: {{ .Values.httpsNodePort }}
+      {{- end }}
       name: https-api
     - port: {{ template "nginx_https_admin_port" . }}
       targetPort: {{ template "nginx_https_admin_port" . }}
+      {{- if .Values.httpsAdminNodePort }}
+      nodePort: {{ .Values.httpsAdminNodePort }}
+      {{- end }}
       name: https-admin
