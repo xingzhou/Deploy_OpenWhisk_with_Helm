@@ -169,6 +169,11 @@ spec:
             value: "{{ .Values.global.kafkaServiceName }}.{{ .Release.Namespace }}:{{ .Values.global.kafkaPort | default 9092 }}"
           - name: "ZOOKEEPER_HOSTS"
             value: "{{ .Values.global.zookeeperServiceName }}.{{ .Release.Namespace }}:{{ .Values.global.zookeeperPort | default 2181 }}"
+          - name: "DB_HOSTSLIST"
+            value: "{{ .Values.global.couchdbServiceName }}.{{ .Release.Namespace }}"
+          - name: "DB_INSTANCES"
+            value: {{ .Values.global.couchdbInstance | default 1 | quote }}
+
         ports:
         - name: invoker
           containerPort: 8080

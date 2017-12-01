@@ -101,6 +101,7 @@ global:
   zookeeperPort: 2181
   kafkaPort: 9092
   couchdbServiceName: "couchdb"
+  couchdbInstances: 1
   couchdbPort: 5984
   controllerStatefulSetName: "controller"
   controllerServiceName: "controller"
