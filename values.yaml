@@ -85,6 +85,7 @@ invokerOptions: ""
 invokerBusyThreshold: 1
 invokerActionsDdoc: "whisks"
 invokerActivationsDdoc: "whisks"
+invokerActivationsFilterDdoc: "whisks-filters"
 
 # API Gateway configurations
 apigatewayReplicaCount: 1
