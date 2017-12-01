@@ -165,10 +165,8 @@ spec:
             value: {{ .Values.invokerActivationsDdoc | default "whisks" | quote }}
           - name: "DB_WHISK_ACTIVATIONS_FILTER_DDOC"
             value: {{ .Values.invokerActivationsFilterDdoc | default "whisks-filters" | quote }}
-          - name: "ZOOKEEPER_HOST"
-            value: "{{ .Values.global.zookeeperServiceName }}.{{ .Release.Namespace }}"
-          - name: "ZOOKEEPER_HOST_PORT"
-            value: {{ .Values.global.zookeeperPort | default 2181 | quote }}
+          - name: "ZOOKEEPER_HOSTS"
+            value: "{{ .Values.global.zookeeperServiceName }}.{{ .Release.Namespace }}:{{ .Values.global.zookeeperPort | default 2181 }}"
         ports:
         - name: invoker
           containerPort: 8080
