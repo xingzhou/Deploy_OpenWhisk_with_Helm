@@ -104,8 +104,8 @@ spec:
           value: "-Xmx2g"
 
         # Kafka properties
-        - name: "KAFKA_HOST"
-          value: {{ include "kafka_url_without_port" . | quote }}
+        - name: "KAFKA_HOSTS"
+          value: {{ include "kafka_url_without_port" . }}:{{ .Values.global.kafkaPort | default 9092 }}
         - name: "KAFKA_HOST_PORT"
           value: {{ .Values.global.kafkaPort | default 9092 | quote }}
 
