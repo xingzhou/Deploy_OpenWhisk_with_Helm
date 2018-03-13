@@ -99,6 +99,8 @@ authsTable: "test_subjects"
 global:
   zookeeperServiceName: "zookeeper"
   kafkaServiceName: "kafka"
+  kafkaImage: "solsson/kafka:0.11.0.0"
+  kafkaImagePullPolicy: "IfNotPresent"
   zookeeperPort: 2181
   kafkaPort: 9092
   couchdbServiceName: "couchdb"
