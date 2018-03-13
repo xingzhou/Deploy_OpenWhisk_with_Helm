@@ -1,3 +1,4 @@
+{{- if .Values.apigatwayEnabled }}
 ---
 apiVersion: v1
 kind: Service
@@ -48,3 +49,4 @@ spec:
           value: {{ include "redis_url" . | quote }}
         - name: "REDIS_PORT"
           value: {{ .Values.global.redisPort | default "6379" | quote }}
+{{ end }}

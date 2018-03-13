@@ -88,6 +88,7 @@ invokerActivationsDdoc: "whisks"
 invokerActivationsFilterDdoc: "whisks-filters"
 
 # API Gateway configurations
+apigatewayEnabled: false
 apigatewayReplicaCount: 1
 
 activationsTable: "test_activations"
