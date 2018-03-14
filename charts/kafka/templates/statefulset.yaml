@@ -10,15 +10,6 @@ spec:
     metadata:
       labels:
         app: {{ template "kafka_statefulset_name" . }}
-      annotations:
-        pod.beta.kubernetes.io/init-containers: '[
-            {
-                "name": "wait-for-zookeeper",
-                "image": "busybox",
-                "imagePullPolicy": "IfNotPresent",
-                "command": ["sh", "-c", "until nslookup {{ .Values.global.zookeeperServiceName}}.{{ .Release.Namespace }}; do echo waiting for {{ .Values.global.zookeeperServiceName}}.{{ .Release.Namespace }}; sleep 1; done;"]
-            }
-        ]'
     spec:
       {{- if .Values.global.affinity.enabled }}
       affinity:
@@ -31,6 +22,13 @@ spec:
                 values:
                 - {{ .Values.global.affinity.kafkaNodeLabel }}
       {{- end }}
+
+      initContainers:
+      - name: "wait-for-zookeeper"
+        image: "busybox"
+        imagePullPolicy: "IfNotPresent"
+        command: ["sh", "-c", "result=1; until [ $result -eq 0 ]; do nslookup {{ .Values.global.zookeeperServiceName}}.{{ .Release.Namespace }}; result=$?; echo waiting for {{ .Values.global.zookeeperServiceName}}.{{ .Release.Namespace }}; sleep 1; done;"]
+
       containers:
       - name: {{ template "kafka_statefulset_name" . }}
         image: {{ .Values.image | default "solsson/kafka:0.11.0.0" | quote }}
