@@ -65,7 +65,7 @@ spec:
         # Update this image to the publix OpenWhisk Image once this PR is merged.
         # https://github.com/apache/incubator-openwhisk/pull/2452
         image: {{ .Values.controllerImage | default "openwhisk/controller" | quote }}
-        command: ["/bin/bash", "-c", "COMPONENT_NAME=$(hostname | cut -d'-' -f2) /controller/bin/controller `hostname | cut -d'-' -f2`"]
+        command: ["/bin/bash", "-c", "COMPONENT_NAME=$(hostname | cut -d'-' -f2) /init.sh `hostname | cut -d'-' -f2`"]
         ports:
         - name: controller
           containerPort: {{ template "controller_port" . }}
@@ -121,23 +121,23 @@ spec:
           value: "60"
 
         # properties for DB connection
-        - name: "DB_USERNAME"
+        - name: "CONFIG_whisk_couchdb_username"
           value: {{ template "couchdb_username" . }}
-        - name: "DB_PASSWORD"
+        - name: "CONFIG_whisk_couchdb_password"
           value: {{ template "couchdb_password" . }}
-        - name: "DB_PORT"
+        - name: "CONFIG_whisk_couchdb_port"
           value: {{ include "couchdb_port" . | quote}}
-        - name:  "DB_PROTOCOL"
+        - name: "CONFIG_whisk_couchdb_protocol"
           value: "http"
-        - name: "DB_HOST"
+        - name: "CONFIG_whisk_couchdb_host"
           value: {{ include "couchdb_url_without_port" . | quote }} 
-        - name: "DB_PROVIDER"
+        - name: "CONFIG_whisk_couchdb_provider"
           value: "CouchDB"
-        - name: "DB_WHISK_ACTIVATIONS"
+        - name: "CONFIG_whisk_couchdb_databases_WhiskActivation"
           value: {{ template "activations_table" . }}
-        - name: "DB_WHISK_ACTIONS"
+        - name: "CONFIG_whisk_couchdb_databases_WhiskEntity"
           value: {{ template "actions_table" . }}
-        - name: "DB_WHISK_AUTHS"
+        - name: "CONFIG_whisk_couchdb_databases_WhiskAuth"
           value: {{ template "auths_table" . }}
         - name: "DB_WHISK_ACTIONS_DDOC"
           value: {{ .Values.controllerActionsDdoc | default "whisks" | quote }}
