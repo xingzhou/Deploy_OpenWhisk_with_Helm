@@ -29,7 +29,7 @@ spec:
       containers:
       - name: {{ template "couchdb_deployment_name" . }}
         imagePullPolicy: {{ .Values.imagePullPolicy | default "IfNotPresent" | quote }}
-        image: {{ .Values.image | default "tomxing/openwhisk_couchdb" | quote }}
+        image: {{ .Values.image | default "openwhisk/kube-couchdb" | quote }}
         command: ["/init.sh"]
         ports:
         - name: couchdb
