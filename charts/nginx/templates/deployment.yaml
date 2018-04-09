@@ -34,7 +34,7 @@ spec:
       containers:
       - name: {{ template "nginx_deployment_name" . }}
         imagePullPolicy: {{ .Values.imagePullPolicy | default "IfNotPresent" | quote }}
-        image: {{ .Values.image | default "tomxing/openwhisk_nginx" | quote }}
+        image: {{ .Values.image | default "nginx:1.11" | quote }}
         ports:
         - name: http
           containerPort: {{ template "nginx_http_port" . }}

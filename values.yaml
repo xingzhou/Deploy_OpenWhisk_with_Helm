@@ -43,7 +43,7 @@ nginx:
   configmapName: "nginx"
   deploymentName: "nginx"
   replicaCount: 1
-  image: "tomxing/openwhisk_nginx"
+  image: "nginx:1.11"
   imagePullPolicy: "IfNotPresent"
   httpPort: 80
   httpNodePort: 30000
