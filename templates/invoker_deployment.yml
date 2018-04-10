@@ -53,11 +53,10 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       {{- end }}
       
-      initContainers:
       - name: "wait-for-kafka"
-        image: {{ .Values.global.kafkaImage | default "solsson/kafka:0.11.0.0" | quote }}
-        imagePullPolicy: {{ .Values.global.kafkaImagePullPolicy | default "IfNotPresent" | quote }}
-        command: ["sh", "-c", "result=1;until [ $result -eq 0 ]; do  ping {{ template "kafka_url_without_port" . }} -c 5; result=$?; if [ $result -eq 0 ];then bin/kafka-topics.sh --list --zookeeper {{ .Values.global.zookeeperServiceName | default "zookeeper" }}.{{ .Release.Namespace }}:{{ .Values.global.zookeeperPort | default 2181 }}; result=$?; fi; echo waiting for {{ template "kafka_url_without_port" . }}; sleep 1; done;"] 
+        image: "busybox"
+        imagePullPolicy: "IfNotPresent"
+        command: ["sh", "-c", "result=1; until [ $result -eq 0 ]; do nslookup {{ .Values.global.kafkaServiceName}}.{{ .Release.Namespace }}; result=$?; echo waiting for {{ .Values.global.kafkaServiceName}}.{{ .Release.Namespace }}; sleep 1; done;"]
 
       containers:
       - name: {{ template "invoker_statefulset_name" . }}
