@@ -33,28 +33,23 @@ spec:
       - name: {{ template "kafka_statefulset_name" . }}
         image: {{ .Values.image | default "wurstmeister/kafka:0.11.0.1" | quote }}
         imagePullPolicy: {{ .Values.imagePullPolicy | default "IfNotPresent" | quote }}
-        livenessProbe:
-          exec:
-            command:
-              - bin/kafka-topics.sh
-              - --zookeeper
-              - {{ include "zookeeper_service_address" . | quote }}
-              - --list
-          initialDelaySeconds: 30
-          timeoutSeconds: 5
-        readinessProbe:
-          exec:
-            command:
-              - bin/kafka-topics.sh
-              - --zookeeper
-              - {{ include "zookeeper_service_address" . | quote }}
-              - --list
-          initialDelaySeconds: 30
-          timeoutSeconds: 5
         ports:
         - containerPort: {{ template "kafka_port" . }}
           name: kafka
-        command:
-        - sh
-        - -c
-        - "./bin/kafka-server-start.sh config/server.properties --override zookeeper.connect={{ template "zookeeper_service_address" . }} --override broker.id=${HOSTNAME##*-}"
+        env:
+        - name: "KAFKA_BROKER_ID"
+          value: "0"
+        - name: "KAFKA_ADVERTISED_HOST_NAME"
+          value: {{ template "kafka_statefulset_name" . }}
+        - name: "KAFKA_ADVERTISED_PORT"
+          value: "{{ template "kafka_port" .}}"
+        - name: "KAFKA_HOST_NAME"
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: "KAFKA_PORT"
+          value: "{{ template "kafka_port" .}}"
+
+        # zookeeper info
+        - name: "KAFKA_ZOOKEEPER_CONNECT"
+          value: {{ include "zookeeper_service_address" . | quote }}
