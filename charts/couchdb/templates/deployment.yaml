@@ -45,6 +45,18 @@ spec:
           value: {{ .Values.global.couchdbPassword | default "some_passw0rd" | quote }}
         - name: "DB_PORT"
           value: {{ include "couchdb_port" . | quote }}
+        - name: "NODENAME"
+          value: "couchdb0"
+        readinessProbe:
+          httpGet:
+            port: {{ template "couchdb_port" . }}
+            # Tempting to say "/$(DB_PREFIX)_activations", but probe runs
+            # externally, therefore can't access the container environment...
+            path: "/test_activations"
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          failureThreshold: 10
+          timeoutSeconds: 1
         {{- if .Values.persistence.enabled }}
         volumeMounts:
           - name: database-storage
