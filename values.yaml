@@ -82,10 +82,6 @@ invokerReplicasetCount: 2
 invokerImagePullPolicy: "IfNotPresent"
 invokerImage: "openwhisk/invoker"
 invokerOptions: ""
-invokerBusyThreshold: 1
-invokerActionsDdoc: "whisks"
-invokerActivationsDdoc: "whisks"
-invokerActivationsFilterDdoc: "whisks-filters"
 
 # API Gateway configurations
 apigatewayEnabled: false

@@ -52,7 +52,8 @@ spec:
                   - {{ template "invoker_statefulset_name" . }}
               topologyKey: "kubernetes.io/hostname"
       {{- end }}
-      
+     
+      initContainers: 
       - name: "wait-for-kafka"
         image: "busybox"
         imagePullPolicy: "IfNotPresent"
@@ -70,22 +71,10 @@ spec:
         env:
           - name: "PORT"
             value: "8080"
-          - name: "SELF_DOCKER_ENDPOINT"
-            value: "localhost"
-          - name: "SERVICE_CHECK_HTTP"
-            value: "/ping"
-          - name: "SERVICE_CHECK_TIMEOUT"
-            value: "2s"
-          - name: "SERVICE_CHECK_INTERVAL"
-            value: "15s"
           - name: "WHISK_API_HOST_NAME"
             value: "nginx.openwhisk"
-          - name: "WHISK_VERSION_BUILDNO"
-            value: "latest"
           - name: "INVOKER_CONTAINER_NETWORK"
             value: "bridge"
-          - name: "INVOKER_BUSYTHRESHOLD"
-            value: {{ .Values.invokerBusyThreshold | default 16 | quote }}
           - name: "INVOKER_USE_RUNC"
             value: "false"
 
@@ -97,18 +86,10 @@ spec:
           - name: "DOCKER_REGISTRY"
             value: ""
 
-          - name: "REDIS_HOST_PORT"
-            value: "6379"
-          - name: "REDIS_HOST"
-            value: "redis.openwhisk"
           - name: "INVOKER_NAME"
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
-
-          # Invoker instance count. Needs to match replica count
-          #- name: "INVOKER_INSTANCES"
-          #  value: {{ .Values.invokerReplicasetCount | default 2 | quote }}
 
           # Java options
           - name: "JAVA_OPTS"
@@ -117,12 +98,6 @@ spec:
           # Invoker options
           - name: "INVOKER_OPTS"
             value: {{ .Values.invokerOptions | quote }}
-
-          # Kafka properties
-          - name: "KAFKA_HOST"
-            value: {{ include "kafka_url_without_port" . | quote }}
-          - name: "KAFKA_HOST_PORT"
-            value: {{ .Values.global.kafkaPort | default 9092 | quote }}
 
           # This property can change since it is generated via Ansible GroupVars
           - name: "RUNTIMES_MANIFEST"
@@ -155,20 +130,10 @@ spec:
             value: {{ template "actions_table" . }}
           - name: "CONFIG_whisk_couchdb_databases_WhiskAuth"
             value: {{ template "auths_table" . }}
-          - name: "DB_WHISK_ACTIONS_DDOC"
-            value: {{ .Values.invokerActionsDdoc | default "whisks" | quote }}
-          - name: "DB_WHISK_ACTIVATIONS_DDOC"
-            value: {{ .Values.invokerActivationsDdoc | default "whisks" | quote }}
-          - name: "DB_WHISK_ACTIVATIONS_FILTER_DDOC"
-            value: {{ .Values.invokerActivationsFilterDdoc | default "whisks-filters" | quote }}
           - name: "KAFKA_HOSTS"
             value: "{{ .Values.global.kafkaServiceName }}.{{ .Release.Namespace }}:{{ .Values.global.kafkaPort | default 9092 }}"
           - name: "ZOOKEEPER_HOSTS"
             value: "{{ .Values.global.zookeeperServiceName }}.{{ .Release.Namespace }}:{{ .Values.global.zookeeperPort | default 2181 }}"
-          - name: "DB_HOSTSLIST"
-            value: "{{ .Values.global.couchdbServiceName }}.{{ .Release.Namespace }}"
-          - name: "DB_INSTANCES"
-            value: {{ .Values.global.couchdbInstance | default 1 | quote }}
 
         ports:
         - name: invoker
