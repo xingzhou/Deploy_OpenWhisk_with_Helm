@@ -71,11 +71,11 @@ controllerLimitsActionsInvokesConcurrent: 100
 controllerLimitsActionsInvokesConcurrentinsystem: 100
 controllerLocalbookkeeping: true
 controllerSeedNodes: "[]"
-controllerHA: true
+controllerHA: false
 
 # Invoker configurations
 invokerStatefulsetName: "invoker"
-invokerReplicasetCount: 2
+invokerReplicasetCount: 1
 invokerImagePullPolicy: "IfNotPresent"
 invokerImage: "openwhisk/invoker"
 invokerOptions: ""
@@ -100,14 +100,14 @@ global:
   controllerStatefulSetName: "controller"
   controllerServiceName: "controller"
   controllerPort: 8080
-  controllerReplicaCount: 2
+  controllerReplicaCount: 1
   couchdbUserName: "whisk_admin"
   couchdbPassword: "some_passw0rd"
   redisServiceName: "redis"
   redisServicePort: 6379
   # Resolve the pod/node affinity for invoker, controller and other components.
   affinity:
-    enabled: true
+    enabled: false
     invokerNodeLabel: invoker
     controllerNodeLabel: controller
     kafkaNodeLabel: kafka
