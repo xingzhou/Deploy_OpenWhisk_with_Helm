@@ -22,12 +22,12 @@ Please follow the following steps in this section to use [Helm](https://github.c
 
 The first step is to prepare docker images used by this chart on your Kubernetes node. Here is a summary of the images needed:
 
-- `zookeeper`: uses `zookeeper:3.4` at present, no need to make a customized zookeeper image in advance.
-- `kafka`: uses `solsson/kafka:0.11.0.0`, no need to make a customized kafka image in advance.
-- `couchdb`: uses a pre-built image based on `couchdb-1.6`. User can build this image at `docker/counchdb` by using `docker build` command or use a pre-built image `tomxing/openwhisk_couchdb` at docker hub.
-- `controller`: uses OpenWhisk official `openwhisk/controller` image, no need to make a customized controller image in advance.
-- `invoker`: uses OpenWhisk official `openwhisk/invoker` image, no need to make a customized invoker image in advance.
-- `nginx`: uses a pre-built image based on `nginx:1.11`. User can build this image at `docker/nginx` by using `docker build` command or use a pre-built image `tomxing/openwhisk_nginx` at docker hub.
+- `zookeeper`: uses `zookeeper:3.4` at present.
+- `kafka`: uses `wurstmeister/kafka:0.11.0.1`.
+- `couchdb`: uses `openwhisk/kube-couchdb`, this is a pre-built docker image made from official `openwhisk-on-kubernetes`. For more information, please check the [docker file](https://github.com/apache/incubator-openwhisk-deploy-kube/blob/master/docker/couchdb/Dockerfile) for this image.
+- `controller`: uses OpenWhisk official `openwhisk/controller` image.
+- `invoker`: uses OpenWhisk official `openwhisk/invoker` image.
+- `nginx`: uses `nginx:1.11`.
 
 This chart provides default images for all of the above containers, so you can try deploy without building any images in advance.
 
@@ -58,7 +58,7 @@ kubectl get pods -n kube-system
 
 ```
 
-Then grant corresponding cluster role to `Helm` users:
+Then grant corresponding cluster role to `Helm` user:
 ```shell
 kubectl create clusterrolebinding tiller-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
 ```
@@ -86,14 +86,11 @@ kubectl get pods -n openwhisk
 
 Install an [OpenWhisk client](https://github.com/apache/incubator-openwhisk/tree/master/docs) to test the deployed OpenWhisk environment.
 
-Run the following command to get the `nginx` service port:
-```shell
-kubectl describe service nginx -n openwhisk
-```
+For now, we are using nginx to provide web access for OpenWhisk client. By default, the nginx service is configured to run at port 30000 for HTTP connection and 30001 for HTTPS connection.
 
-From the output, please find out the port used for api endpoint. Combine this port with node IP on which nginx pod is deployed, and run the following OpenWhisk client configuration:
+As a result, please run the following command to config your OpenWhisk client:
 ```shell
-wsk property set --apihost http://<nginx_node_IP>:<nginx_api_port>
+wsk property set --apihost http://<nginx_node_IP>:30000
 wsk property set --auth 23bc46b1-71f6-4ed5-8c54-816aa4f8c502:123zO3xZCLrMN6v2BKK1dXYFpXlPkccOFqm12CdAsMgRU4VrNZ9lyGVCGuMDGIwP
 ```
 
@@ -129,6 +126,10 @@ If the action is invoked and message is returned without error, congratulations,
 Use the following command to remove the deployment:
 ```shell
 helm delete <release_name>
+```
+or with a `--purge` option if you want to completely remove the deployment from helm:
+```shell
+helm delete <release_name> --purge
 ```
 
 ## References
